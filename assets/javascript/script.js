@@ -1,22 +1,28 @@
 $(document).ready(function() {
 
+	//parallax 
+	$('.parallax').parallax();
+
+	//*******************************************
+	//		      GLOBAL VARIABLES
+	//*******************************************
+
 	// Access Google Distance Matrix service
 	const distanceService = new google.maps.DistanceMatrixService();
 
-	// create variables for calls to services
+	// Create variables for calls to services
 	const directionsService = new google.maps.DirectionsService();
 	const directionsDisplay = new google.maps.DirectionsRenderer();
 
-	let hybridMileage;
-	let sedanMileage;
-	let truckMileage;
-
-	let homeAdress;
+	// Address variables
+	let homeAddress;
 	let workAddress;
 
+	// Travel info variables
 	let travelDistance;
 	let travelTime;
 
+	// Card Info variables
 	let dailyCommuteTime;
 	let weeklyCommuteTime;
 	let monthlyCommuteTime;
@@ -26,49 +32,20 @@ $(document).ready(function() {
 	let monthlyDistance;
 	let yearlyDistance;
 
-	const mpgAverage = 24.8; // Average MPG as of November 2016
+	// Vehicle Info variables
+	let vehicleYear;
+	let vehicleMake;
+	let vehicleModel;
+
+	let mpgVal = 24.8; // Average MPG as of November 2016
 	const gasPriceAvg = 2.36; // National average gas price as of 6/7/16 according to http://gasprices.aaa.com/
 
-	// Display current average gas price
+	// Use variables to hold averages
 	let gasPriceDisplay = $(`<h5 id="gasPrice">National Average Gas Price: $${gasPriceAvg}</h5>`);
-	let mpgDisplay = $(`<h5 id="mpgPrice">National Average MPG: ${mpgAverage}</h5>`)
-	$('.averages').append(gasPriceDisplay);
-	$('.averages').append(mpgDisplay);
+	let mpgDisplay = $(`<h5 id="mpgPrice">Your Vehicle's MPG: <span id="mpgVal"> ${mpgVal}</span></h5>`)
 
-	//******************************************
-	//				MAP CREATION
-	//******************************************
 
-	// Location where map will center its focus initially
-	const centerPoint = new google.maps.LatLng(33.4484, -112.0740);
-
-	// map options object
-	const mapOptions = {
-		zoom: 12,
-		center: centerPoint
-	};
-
-	// creates map and pushes directions to map
-	const map = new google.maps.Map(document.getElementById('mapDisplay'), mapOptions);
-	directionsDisplay.setMap(map);
-
-	//*************************************************************
-
-	// click events on buttons 
-	$("#hybrid").on("click", function() {
-		hybridMileage = 45;
-		console.log(hybridMileage);
-	});
-
-	$("#sedan").on("click", function () {
-		sedanMileage = 25;
-		console.log(sedanMileage);
-	});
-
-	$("#truck").on("click", function() {
-		truckMileage = 15;
-		console.log(truckMileage);
-	});
+//************************************************************************
 
 	//*********************************************
 	//			COMPUTE BUTTON CLICK 
@@ -77,50 +54,103 @@ $(document).ready(function() {
 	$("#compute").on("click", function(event) {
 		event.preventDefault();
 
-		// $("#gasPriceDisplay")
-		// $("gallonsConsumedDisplay")
-		// $("distanceTraveledDisplay")
+		// Initializes Map
+		createMap();
+
+		// Limits cards on page to 4 at a time
+		$("#results").empty();
+		// Refreshes MPG display value
+		$("#mpgVal").empty();
+
 		// pull locations from text input in DOM
-		homeAdress = $("#homeAddress").val().trim();
-		workAddress = $("#workAddress").val().trim();		// $("moneySpentDisplay")
+		homeAddress = $("#homeAddress").val().trim();
+		workAddress = $("#workAddress").val().trim();	
 
-
-		console.log('start: ', homeAdress);
+		// Console logs addresses
+		console.log('start: ', homeAddress);
 		console.log('destination: ', workAddress);
+
+		// Display gas price and average MPG
+		$('.averages').append(gasPriceDisplay);
+		$('.averages').append(mpgDisplay);		
 
 		// Get directions from home to work and display
 		calculateRoute();
 
 		// Distance Matrix request object
 		let matrixRequest = {
-			origins: ['talking stick arena, phoenix, az'],//[homeAdress],
-			destinations:['125 e commonwealth, chandler, az'], //[]workAddress],
+			origins: [homeAddress],//[homeAddress],
+			destinations: [workAddress], //[workAddress],
 			travelMode: 'DRIVING',
 			unitSystem: google.maps.UnitSystem.IMPERIAL
 		}
 
 		// Distance Matrix request call. Gives us travel time and distance
 		distanceService.getDistanceMatrix(matrixRequest, matrixCallBack);
-	});
-	//************************************************************************
 
-	let queryURL = "https://api.edmunds.com/api/vehicle/v2/styles/200477465/equipment?availability=standard&equipmentType=OTHER&name=SPECIFICATIONS&fmt=json&api_key=z7eex5rta2zyqhdqgmqa6v5d";
-
-	$.ajax({
-		url: queryURL,
-		method: "GET"
-	})
-
-	.done(function(response) {
-
-		console.log(response);
+		// Calls Edmunds API for MPG info
+		// getCarDetails();
 
 	});
 
+//************************************************************************
 
 	//*******************************************
 	//				FUNCTIONS
 	//*******************************************
+
+	// Initializes Map 
+	function createMap() {
+		
+		// Location where map will center its focus initially
+		const centerPoint = new google.maps.LatLng(33.4484, -112.0740);
+
+		// map options object
+		const mapOptions = {
+			zoom: 12,
+			center: centerPoint
+		};
+
+		// Pushes directions to map
+		$("#mapHeader").html("<h5>Your Daily Commute");
+		const map = new google.maps.Map(document.getElementById('mapDisplay'), mapOptions);
+		directionsDisplay.setMap(map);
+
+		// Add shadow depth and hover affect to map 
+		$('#mapDisplay').attr('class', 'z-depth-4');
+	}
+
+
+	// Uses Edmunds API to retrieve vehicle MPG data based on vehicle type
+	function getCarDetails() {
+
+		// Grabs values from input fields
+		vehicleYear = $("#vehicleYear").val().trim();
+		vehicleMake = $("#vehicleMake").val().trim();
+		vehicleModel = $("#vehicleModel").val().trim();
+
+		// URL info
+		let apiKey = "dmvg55zmrywxx685fjba3t6c";
+		const queryURL = `https://api.edmunds.com/api/vehicle/v2/${vehicleMake}/${vehicleModel}/${vehicleYear}/styles?view=full&fmt=json&api_key=${apiKey}`;
+		// "https://api.edmunds.com/api/vehicle/v2/" + vehicleMake + "/" + vehicleModel + "/" + vehicleYear + "/styles?state=used&category=4dr+SUV&view=full&fmt=json&api_key=t5werjahd6rpgtxsxkcz6s5x";
+
+		// Sends AJAX request to Edmunds API to retrieve MPG data
+		$.ajax({
+			url: queryURL,
+			method: "GET"
+		}).done(function(response) {
+
+			// variable that holds MPG value
+			mpgVal = response.styles[0].MPG.highway;
+
+			$("#mpgVal").text(mpgVal);
+
+			// console.logs
+			console.log(response);
+			console.log(response.styles[0].MPG.highway);
+		});
+	}
+
 
 	// Distance Matrix callback function
 	function matrixCallBack(result, status) {
@@ -140,8 +170,8 @@ $(document).ready(function() {
 			// Calculate commute distance
 			dailyDistance = travelDistance*2;
 			weeklyDistance = travelDistance*10;
-			monthlyDistance = travelDistance*44;
-			yearlyDistance = travelDistance*528;
+			monthlyDistance = (travelDistance*44).toFixed(1); // round to 1st decimal place
+			yearlyDistance = (travelDistance*528).toFixed(1);
 
 			// Display cards with commute info
 			cardDisplay();
@@ -156,8 +186,8 @@ $(document).ready(function() {
 	// calculate the total cost of a commute
 	function computeCost(miles, mpg) {
 
-		// Number of gallons of gas needed for commute (round up)
-		const gallons = Math.ceil(miles/mpg);
+		// Number of gallons of gas needed for commute
+		const gallons = miles/mpg;
 
 		// return cost of commute rounded to 2 decimal places
 		return (gallons * gasPriceAvg).toFixed(2);
@@ -231,19 +261,23 @@ $(document).ready(function() {
 	function calculateRoute() {
 
 		let request = {
-		origin: "talking stick arena, phoenix, az",
-		destination: "125 e commonwealth ave, chandler, az",
+		origin: homeAddress,
+		destination: workAddress,
 		travelMode: 'DRIVING'
 		};
 
+		// Creates call to directionsService
 		directionsService.route(request, function(result, status) {
 
-		console.log(result, status);
-
+		// Sets directions on Map
 		directionsDisplay.setDirections(result);
+
+		// Console log
+		console.log(result, status);
 
 		});
 	}
+
 
 	// Displays seperate cards for each time frame with corresponding commute info
 	function cardDisplay() {
@@ -253,27 +287,28 @@ $(document).ready(function() {
 			timeFrame: 'Daily', 
 			commuteTime: `Time: ${dailyCommuteTime}`, 
 			commuteDistance: `Distance: ${dailyDistance} miles`, 
-			cost: `Cost: $${computeCost(dailyDistance, mpgAverage)}`
+			cost: `Cost: $${computeCost(dailyDistance, mpgVal)}`
 		}, {
 			timeFrame: 'Weekly',
 			commuteTime: `Time: ${weeklyCommuteTime}`,
 			commuteDistance: `Distance: ${weeklyDistance} miles`,
-			cost: `Cost: $${computeCost(weeklyDistance, mpgAverage)}`
+			cost: `Cost: $${computeCost(weeklyDistance, mpgVal)}`
 		}, {
 			timeFrame: 'Monthly',
 			commuteTime: `Time: ${monthlyCommuteTime}`,
 			commuteDistance: `Distance: ${monthlyDistance} miles`,
-			cost: `Cost: $${computeCost(monthlyDistance, mpgAverage)}`
+			cost: `Cost: $${computeCost(monthlyDistance, mpgVal)}`
 		}, {
 			timeFrame: 'Yearly',
 			commuteTime: `Time: ${yearlyCommuteTime}`,
 			commuteDistance: `Distance: ${yearlyDistance} miles`,
-			cost: `Cost: $${computeCost(yearlyDistance, mpgAverage)}`
+			cost: `Cost: $${computeCost(yearlyDistance, mpgVal)}`
 		}];
 
+		// Loops through commute object to create and append cards
 		for (let i = 0; i < commute.length; i++) {
 			let commuteObj = commute[i];
-			let cardDiv = $('<div class="card hoverable center-align col s3">');
+			let cardDiv = $('<div class="card hoverable center-align col s12 m6 l3">');
 			cardDiv.attr('id', `cardNum-${i+1}`);
 			let commuteDiv = $('<div class="card-content">');
 			commuteDiv.append(`<p>${commuteObj.timeFrame}`);
