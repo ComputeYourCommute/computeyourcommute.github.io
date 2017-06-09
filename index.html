@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <title>Compute your Commute</title>
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
+
   <!-- Materialize compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
 
@@ -80,7 +83,7 @@
         </div>
 
         <!-- Compute button -->
-        <div class="row">
+        <div class="row" id="submitRow">
           <div class="col s12" id="submitBtn">
             <button class="btn z-depth-4 waves-effect waves-light btn-large" type="submit" name="action" id="compute">Compute
               <i class="material-icons right">send</i>
@@ -91,7 +94,7 @@
 
 
       <!-- Average Gas Price and Vehicle MPG display here -->
-      <div class=" row center-align">
+      <div class="row center-align" id="averagesRow">
         <div class=" averages col s12"></div>
       </div>  
 
@@ -110,14 +113,48 @@
     </div>
   </main> 
 
-  <footer class="page-footer">
+<!-- Footer -->
+<footer class="page-footer">
+<div class="container">
+  <div class="row" id="footerRow">
+    <div class="col l6 s12">
+      <h5 class="white-text"><!-- <img src="assets/images/favicon.png"> --> Compute Your Commute</h5>
+      <p class="grey-text text-lighten-4">Made for UA Bootcamp 2017
+    </div>
+    <div class="col l4 offset-l2 s12">
+      <h5 class="white-text" id="tools">Tools</h5>
+      <ul>
+        <li>
+        <a class="grey-text text-lighten-3" href="https://github.com/ComputeYourCommute/computeyourcommute.github.io"><img src="assets/images/github.png" style="width: 45px"></a>       
+        <a class="grey-text text-lighten-3" href="https://developers.google.com/maps/"><img src="assets/images/googlemaps.png" style="width: 45px"></a>      
+        <a class="grey-text text-lighten-3" href="http://developer.edmunds.com/"><img src="assets/images/edmunds.png" style="width: 45px"></a>
+        <a class="grey-text text-lighten-3" href="http://materializecss.com/"><img src="assets/images/materialize2.png" style="width: 45px"></a>
+        <a class="grey-text text-lighten-3"><img src="assets/images/languages.png" style="width: 80px"></a>
+        </li>
+
+
+        <!-- <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li> -->
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="footer-copyright">
+  <div class="container">
+  © 2017 Jalil | Cesar | Nick
+  <!-- <a class="grey-text text-lighten-4 right">Built Using Materialize</a> -->
+  </div>
+</div>
+</footer>
+
+<!--   <footer class="page-footer">
+  Test
     <div class="footer-copyright">
       <div class="container">
       Cesar, Nick, and Jalil
       <a class="grey-text text-lighten-4 right">UA Coding Bootcamp 2017</a>
       </div>
     </div>
-  </footer>
+  </footer> -->
 
   <!--Import jQuery before materialize.js-->
   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>

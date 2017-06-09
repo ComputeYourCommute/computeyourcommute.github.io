@@ -63,9 +63,11 @@ body {
 #mapHeader {
   font-size: 24px;
   text-align: center;
+  margin-bottom: 18px;
 }
 
 #results {
+  margin-top: 0;
   width: 100%;
 }
 
@@ -77,6 +79,10 @@ body {
   width: 100%;
   background-color: #EE6E73;
   color: #f5f5f5;
+}
+
+.card-content p {
+  font-size: 20px;
 }
 
 #cardNum-1, #cardNum-2, #cardNum-3, #cardNum-4 {
@@ -131,5 +137,29 @@ body {
   bottom: 30%;
 }
 
+.averages {
+  margin-top: 0;
+  bottom: 0;
+}
 
+#submitRow {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 
+#averagesRow {
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+
+#footerRow {
+  margin: 0 0 0 0px;
+}
+
+.page-footer {
+  padding-top: 10px;
+}
+
+#tools {
+  text-align: center;
+}
