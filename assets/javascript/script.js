@@ -130,7 +130,7 @@ $(document).ready(function() {
 		vehicleModel = $("#vehicleModel").val().trim();
 
 		// URL info
-		let apiKey = "dmvg55zmrywxx685fjba3t6c";
+		let apiKey = "hqwtbabccwd5ggr6f5q7njwc";
 		const queryURL = `https://api.edmunds.com/api/vehicle/v2/${vehicleMake}/${vehicleModel}/${vehicleYear}/styles?view=full&fmt=json&api_key=${apiKey}`;
 		// "https://api.edmunds.com/api/vehicle/v2/" + vehicleMake + "/" + vehicleModel + "/" + vehicleYear + "/styles?state=used&category=4dr+SUV&view=full&fmt=json&api_key=t5werjahd6rpgtxsxkcz6s5x";
 
