@@ -89,7 +89,7 @@ $(document).ready(function() {
 		distanceService.getDistanceMatrix(matrixRequest, matrixCallBack);
 
 		// Calls Edmunds API for MPG info
-		getCarDetails();
+		// getCarDetails();
 
 	});
 
