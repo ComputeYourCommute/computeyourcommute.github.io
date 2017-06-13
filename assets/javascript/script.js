@@ -89,7 +89,7 @@ $(document).ready(function() {
 		distanceService.getDistanceMatrix(matrixRequest, matrixCallBack);
 
 		// Calls Edmunds API for MPG info
-		// getCarDetails();
+		getCarDetails();
 
 	});
 
@@ -130,7 +130,7 @@ $(document).ready(function() {
 		vehicleModel = $("#vehicleModel").val().trim();
 
 		// URL info
-		let apiKey = "hqwtbabccwd5ggr6f5q7njwc";
+		let apiKey = "z7eex5rta2zyqhdqgmqa6v5d";
 		const queryURL = `https://api.edmunds.com/api/vehicle/v2/${vehicleMake}/${vehicleModel}/${vehicleYear}/styles?view=full&fmt=json&api_key=${apiKey}`;
 		// "https://api.edmunds.com/api/vehicle/v2/" + vehicleMake + "/" + vehicleModel + "/" + vehicleYear + "/styles?state=used&category=4dr+SUV&view=full&fmt=json&api_key=t5werjahd6rpgtxsxkcz6s5x";
 
