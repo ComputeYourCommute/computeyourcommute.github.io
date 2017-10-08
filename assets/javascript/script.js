@@ -38,7 +38,7 @@ $(document).ready(function() {
 	let vehicleModel;
 
 	let mpgVal = 24.8; // Average MPG as of November 2016
-	const gasPriceAvg = 2.36; // National average gas price as of 6/7/16 according to http://gasprices.aaa.com/
+	const gasPriceAvg = 2.49; // National average gas price as of 6/7/16 according to http://gasprices.aaa.com/
 
 	// Use variables to hold averages
 	let gasPriceDisplay = $(`<h5 id="gasPrice">National Average Gas Price: $${gasPriceAvg}</h5>`);
