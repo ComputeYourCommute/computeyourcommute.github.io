@@ -57,7 +57,7 @@ $(document).ready(function() {
 		// Initializes Map
 		createMap();
 
-		// Limits cards on page to 4 at a time
+		// Limits cards on page to 4 at a time by removing previous cards
 		$("#results").empty();
 		// Refreshes MPG display value
 		$("#mpgVal").empty();
